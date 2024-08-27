@@ -1,0 +1,20 @@
+---
+- name: Deploy Sock Shop
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - secrets.yml
+
+  tasks:
+    - name: Apply Kubernetes manifests
+      kubernetes:
+        definition: "{{ lookup('template', item) }}"
+        state: present
+      loop:
+        - deployment.yml
+        - ingress.yml
+        - cert.yml
+        - alertmanager-configmap.yml
+        - alertmanager-deploy.yml
+        - alertmanager-svc.yml
